@@ -91,6 +91,23 @@ def check():
     jumble = flask.session["jumble"]
     matches = flask.session.get("matches", [])  # Default to empty list
 
+    flask.session["input_letters"] = text
+    next_one = 0
+    inp_key = text[(len(text)-1)]
+    val_key = LetterBag(jumble).contains(inp_key)
+    if not val_key:
+        next_one = 1
+    txtins = jumbleins = 0
+    for letter in text:
+        if letter == inp_key:
+            txtins += 1
+    for letter in jumble:
+        if letter == inp_key:
+            jumbleins += 1
+    # the case when user use the letters more then presented in jumble
+    if txtins > jumbleins:
+        if next_one == 0:
+            next_one = 1
     # Is it good?
     in_jumble = LetterBag(jumble).contains(text)
     matched = WORDS.has(text)
@@ -113,24 +130,16 @@ def check():
 
     # Choose page:  Solved enough, or keep going?
     if len(matches) >= flask.session["target_count"]:
-       return flask.redirect(flask.url_for("success"))
-    else:
-       return flask.redirect(flask.url_for("keep_going"))
+        next_one = flask.url_for("success")
+    # send the data to vocab.html
+    rslt = {"new_one": next_one}
+    return flask.jsonify(result=rslt)
 
 
 ###############
 # AJAX request handlers
 #   These return JSON, rather than rendering pages.
 ###############
-
-@app.route("/_example")
-def example():
-    """
-    Example ajax request handler
-    """
-    app.logger.debug("Got a JSON request")
-    rslt = {"key": "value"}
-    return flask.jsonify(result=rslt)
 
 
 #################
