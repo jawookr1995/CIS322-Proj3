@@ -98,58 +98,41 @@
          {% endfor %}
          {% endif %}
          {% endwith %}
-         <p id = "tiles"> </p>
-    <script>
-    $("#entry").submit(function(event){
-      event.preventDefault();
-    });
-    //Use Keyup function which will detect every stroke when #attempt is entered.
-    $("#attempt").keyup(function(event) {
-      var txt = $("#attempt").val();
-      //current key stroke
-      var keycode = event.which;
-      var letter = String.fromCharCode(keycode);
-      // if input is not letter, then remove last character with slice function.
-      if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
-        txt = txt.slice(0, -1);
-        //take care of keycode backspace,shift and arrow buttons as letters.
-        if(keycode != 8 && keycode != 16 && keycode != 37 && keycode != 38 && keycode != 39 && keycode != 40) {
-          $("#attempt").val(txt);
+         <script>
+         $("#entry").submit( function(event) {
+            event.preventDefault();
+            });
+
+         $("#attempt").keyup(function(event) {
+
+            var txt = $("#attempt").val();  // Current content of the input field
+            var keycode = event.which;      // They key that just went up
+            var letter = String.fromCharCode(keycode);
+
+            if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) { return }
+
+            $.getJSON( "/_check", { text: txt },
+              function(data) {
+               found = data.result.found
+               total = data.result.total
+               if(total) {
+                  $("#response").val("You found a word");
+                  $("#attempt").val("");
+                  window.location.replace("/success")
+               }
+               else if (found) {
+                   $("response").html("Word has already been found");
+               }
+               else {
+                  $("response".html("");
+                  $("attempt").val("");
+            }
+
         }
-      return;
-     }
-     //get JSON data from flask_vocab.py and slice last letter if input is not in jumble.
-     //Also use showTiles function for displaying the keystroke on the web server.
-     $.getJSON("/_check", {text:txt}, function(data) {
-      urlobj = data.result.new_one;
-      if(urlobj == 1) {
-        txt = txt.slice(0,-1);
-        $("#attempt").val(txt);
-      }else if(urlobj !=0) {
-        window.location = urlobj;
-      }
-      showTiles(txt);
-      }
-     );
-    });
+    );
 
-
-function showTiles(text) {
-   text = text.toUpperCase();  // tiles are letter-A.png, etc.
-   tiles_html = "";  // Build up the html text of links
-   for (var i=0; i < text.length; i++) {
-       letter = text.charAt(i);
-       if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
-          continue;
-       }
-       var tileURL = "/static/img/letter-" + letter + ".png";
-       var tileLink = "<img src='" + tileURL +
-           "' style='border: 0px; margin: 0px;'/>";
-       tiles_html = tiles_html + tileLink;
     }
-    $("#tiles").html(tiles_html);
-    // alert("Inserted html: " + tiles_html);
-
+);
 
 }
   </script>
