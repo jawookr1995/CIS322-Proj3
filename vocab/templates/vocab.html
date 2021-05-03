@@ -109,7 +109,14 @@
             var keycode = event.which;      // They key that just went up
             var letter = String.fromCharCode(keycode);
 
-            if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) { return }
+            if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
+               txt = txt.slice(0, -1);
+               //take care of keycode backspace,shift and arrow buttons as letters.
+               if(keycode != 8 && keycode != 16 && keycode != 37 && keycode != 38 && keycode != 39 && keycode != 40) {
+                  $("#attempt").val(txt);
+               }
+              return;
+            }
 
             $.getJSON( "/_check", { text: txt },
               function(data) {
@@ -127,12 +134,27 @@
                   $("response".html("");
                   $("attempt").val("");
             }
+            showTiles(txt);
 
         }
     );
 
     }
 );
+function showTiles(text) {
+               text = text.toUpperCase();  // tiles are letter-A.png, etc.
+               tiles_html = "";  // Build up the html text of links
+               for (var i=0; i < text.length; i++) {
+                   letter = text.charAt(i);
+                   if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
+                      continue;
+                   }
+                   var tileURL = "/static/img/letter-" + letter + ".png";
+                   var tileLink = "<img src='" + tileURL +
+                       "' style='border: 0px; margin: 0px;'/>";
+                   tiles_html = tiles_html + tileLink;
+                }
+                $("#tiles").html(tiles_html);
 
 }
   </script>
