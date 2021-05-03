@@ -82,8 +82,6 @@
             </div>
          </div>
          <br />
-         <p id="response"></p>
-         <p id="attempt"></p>
          {% if session.matches|length is not equalto 0  %}
          <h2>You found </h2>
          <p id="results">
@@ -100,6 +98,8 @@
          {% endfor %}
          {% endif %}
          {% endwith %}
+         <p id = "response"></p>
+         <p id = "tiles"></p>
          <script>
             $("#entry").submit( function(event) {
                event.preventDefault();
@@ -118,40 +118,38 @@
                found = data.result.found
                total = data.result.total
                if(total) {
-<<<<<<< HEAD
-                  $("#response").val("You found it!");
-=======
-                  $("#response").val("You found a word");
->>>>>>> parent of eb52ff8 (final commit)
+                  $("#response").val("You found a word!");
                   $("#attempt").val("");
                   window.location.replace("/success")
                }
                else if (found) {
-<<<<<<< HEAD
-                   $("response").html("Word already found");
+                   $("response").html("Word has already been found");
                }
                else {
                   $("response").html("");
                   $("attempt").val("");
                }
-               showTiles(txt);
+               showTiles(txt)
                }
             );
-      });
-=======
-                   $("response").html("Word has already been found");
-               }
-               else {
-                  $("response".html("");
-                  $("attempt").val("");
-            }
-        }
-    );
 
-    }
+      }
 );
->>>>>>> parent of eb52ff8 (final commit)
-
+   function showTiles(text) {
+      text = text.toUpperCase();  // tiles are letter-A.png, etc.
+      tiles_html = "";  // Build up the html text of links
+      for (var i=0; i < text.length; i++) {
+         letter = text.charAt(i);
+         if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
+            continue;
+            }
+            var tileURL = "/static/img/letter-" + letter + ".png";
+            var tileLink = "<img src='" + tileURL +
+               "' style='border: 0px; margin: 0px;'/>";
+            tiles_html = tiles_html + tileLink;
+            }
+            $("#tiles").html(tiles_html);
+         }
   </script>
       </div>
       <!-- container -->
