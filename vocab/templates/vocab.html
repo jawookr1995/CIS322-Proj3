@@ -104,7 +104,7 @@
             $("#entry").submit( function(event) {
                event.preventDefault();
              });
-
+            //Use Keyup function which will detect every stroke when #attempt is entered.
             $("#attempt").keyup(function(event) {
 
                var txt = $("#attempt").val();  // Current content of the input field
@@ -113,27 +113,36 @@
 
                if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) { return }
 
-            $.getJSON( "/_check", { text: txt },
-              function(data) {
-               found = data.result.found
-               total = data.result.total
-               if(total) {
-                  $("#response").val("You found a word");
-                  $("#attempt").val("");
-                  window.location.replace("/success")
+            $.getJSON( "/_check", { text: txt },function(data) {
+               urlobj = data.result.new_one;
+               if(urlobj == 1) {
+                  $("#attempt").val(txt);}
+               else if(urlobj !=0) {
+                  window.location = urlobj;
                }
-               else if (found) {
-                   $("response").html("Word has already been found");
-               }
-               else {
-                  $("response".html("");
-                  $("attempt").val("");
+               showTiles(txt);
             }
         }
     );
 
+    });
+    function showTiles(text) {
+      text = text.toUpperCase();  // tiles are letter-A.png, etc.
+      tiles_html = "";  // Build up the html text of links
+      for (var i=0; i < text.length; i++) {
+         letter = text.charAt(i);
+         if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
+            continue;
+         }
+         var tileURL = "/static/img/letter-" + letter + ".png";
+         var tileLink = "<img src='" + tileURL + "' style='border: 0px; margin: 0px;'/>";
+         tiles_html = tiles_html + tileLink;
     }
-);
+    $("#tiles").html(tiles_html);
+    // alert("Inserted html: " + tiles_html);
+
+
+}
 
   </script>
       </div>

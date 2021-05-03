@@ -84,12 +84,34 @@ def check():
     made only from the jumble letters, and not a word they
     already found.
     """
-    app.logger.debug("Entering check")
+    app.logger.debug("Ajax Mode")
 
     # The data we need, from form and from cookie
     text = flask.request.form["attempt"]
     jumble = flask.session["jumble"]
     matches = flask.session.get("matches", [])  # Default to empty list
+
+    flask.session["input_letters"] = text
+    next_one = 0
+    inp_key = text[(len(text) - 1)]
+    val_key = LetterBag(jumble).contains(inp_key)
+    # check for valid input_letter
+    if not val_key:
+        # undo the keystroke
+        next_one = 1
+    # number of times that input and jumble had that letter. Each use increase
+    # txt instacne and jumbleinstance 1.
+    txtins = jumbleins = 0
+    for letter in text:
+        if letter == inp_key:
+            txtins += 1
+    for letter in jumble:
+        if letter == inp_key:
+            jumbleins += 1
+    # the case when user use the letters more then presented in jumble
+    if txtins > jumbleins:
+        if next_one == 0:
+            next_one = 1
 
     # Is it good?
     in_jumble = LetterBag(jumble).contains(text)
@@ -100,6 +122,7 @@ def check():
         # Cool, they found a new word
         matches.append(text)
         flask.session["matches"] = matches
+        next_one = flask.url_for("keep_going")
     elif text in matches:
         flask.flash("You already found {}".format(text))
     elif not matched:
@@ -113,11 +136,10 @@ def check():
 
     # Choose page:  Solved enough, or keep going?
     if len(matches) >= flask.session["target_count"]:
-        return flask.redirect(flask.url_for("success"))
-    else:
-        return flask.redirect(flask.url_for("keep_going"))
+        next_one = flask.url_for("success")
+    rslt = {"new_one": next_one}
 
-    return flask.jsonify(result={"found": txt_m, "total": matches})
+    return flask.jsonify(result = rslt)
 
 ###############
 # AJAX request handlers
