@@ -99,7 +99,6 @@ def check():
     if matched and in_jumble and not (text in matches):
         # Cool, they found a new word
         matches.append(text)
-        jumble.remove(text)
         flask.session["matches"] = matches
     elif text in matches:
         flask.flash("You already found {}".format(text))
