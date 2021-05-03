@@ -118,11 +118,16 @@
                found = data.result.found
                total = data.result.total
                if(total) {
+<<<<<<< HEAD
                   $("#response").val("You found it!");
+=======
+                  $("#response").val("You found a word");
+>>>>>>> parent of eb52ff8 (final commit)
                   $("#attempt").val("");
                   window.location.replace("/success")
                }
                else if (found) {
+<<<<<<< HEAD
                    $("response").html("Word already found");
                }
                else {
@@ -133,6 +138,19 @@
                }
             );
       });
+=======
+                   $("response").html("Word has already been found");
+               }
+               else {
+                  $("response".html("");
+                  $("attempt").val("");
+            }
+        }
+    );
+
+    }
+);
+>>>>>>> parent of eb52ff8 (final commit)
 
   </script>
       </div>
