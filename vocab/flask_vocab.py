@@ -147,17 +147,6 @@ def format_filt(something):
     """
     return "Not what you asked for"
 
-#################
-# Functions used within the templates
-#################
-
-@app.template_filter('filt')
-def format_filt(something):
-    """
-    Example of a filter that can be used within
-    the Jinja2 code
-    """
-    return "Not what you asked for"
 
 ###################
 #   Error handlers
