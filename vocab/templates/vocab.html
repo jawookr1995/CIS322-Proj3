@@ -82,6 +82,8 @@
             </div>
          </div>
          <br />
+         <p id="response"></p>
+         <p id="attempt"></p>
          {% if session.matches|length is not equalto 0  %}
          <h2>You found </h2>
          <p id="results">
@@ -99,24 +101,17 @@
          {% endif %}
          {% endwith %}
          <script>
-         $("#entry").submit( function(event) {
-            event.preventDefault();
-            });
+            $("#entry").submit( function(event) {
+               event.preventDefault();
+             });
 
-         $("#attempt").keyup(function(event) {
+            $("#attempt").keyup(function(event) {
 
-            var txt = $("#attempt").val();  // Current content of the input field
-            var keycode = event.which;      // They key that just went up
-            var letter = String.fromCharCode(keycode);
+               var txt = $("#attempt").val();  // Current content of the input field
+               var keycode = event.which;      // They key that just went up
+               var letter = String.fromCharCode(keycode);
 
-            if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
-               txt = txt.slice(0, -1);
-               //take care of keycode backspace,shift and arrow buttons as letters.
-               if(keycode != 8 && keycode != 16 && keycode != 37 && keycode != 38 && keycode != 39 && keycode != 40) {
-                  $("#attempt").val(txt);
-               }
-              return;
-            }
+               if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) { return }
 
             $.getJSON( "/_check", { text: txt },
               function(data) {
@@ -134,29 +129,12 @@
                   $("response".html("");
                   $("attempt").val("");
             }
-            showTiles(txt);
-
         }
     );
 
     }
 );
-function showTiles(text) {
-               text = text.toUpperCase();  // tiles are letter-A.png, etc.
-               tiles_html = "";  // Build up the html text of links
-               for (var i=0; i < text.length; i++) {
-                   letter = text.charAt(i);
-                   if (! "ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(letter)) {
-                      continue;
-                   }
-                   var tileURL = "/static/img/letter-" + letter + ".png";
-                   var tileLink = "<img src='" + tileURL +
-                       "' style='border: 0px; margin: 0px;'/>";
-                   tiles_html = tiles_html + tileLink;
-                }
-                $("#tiles").html(tiles_html);
 
-}
   </script>
       </div>
       <!-- container -->

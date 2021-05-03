@@ -94,7 +94,7 @@ def check():
     # Is it good?
     in_jumble = LetterBag(jumble).contains(text)
     matched = WORDS.has(text)
-    m = text in matches
+    txt_m = text in matches
     # Respond appropriately
     if matched and in_jumble and not (text in matches):
         # Cool, they found a new word
@@ -113,11 +113,11 @@ def check():
 
     # Choose page:  Solved enough, or keep going?
     if len(matches) >= flask.session["target_count"]:
-       return flask.redirect(flask.url_for("success"))
+        return flask.redirect(flask.url_for("success"))
     else:
-       return flask.redirect(flask.url_for("keep_going"))
+        return flask.redirect(flask.url_for("keep_going"))
 
-    return flask.jsonify(result={"found": m, "total": matches})
+    return flask.jsonify(result={"found": txt_m, "total": matches})
 
 ###############
 # AJAX request handlers
