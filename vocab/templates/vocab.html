@@ -82,6 +82,8 @@
             </div>
          </div>
          <br />
+         <p id="response"></p>
+         <p id="tiles"></p>
          {% if session.matches|length is not equalto 0  %}
          <h2>You found </h2>
          <p id="results">
@@ -98,7 +100,6 @@
          {% endfor %}
          {% endif %}
          {% endwith %}
-         <p id = "tiles"></p>
          <script>
             $("#entry").submit( function(event) {
                event.preventDefault();
