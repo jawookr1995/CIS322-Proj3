@@ -118,7 +118,7 @@
                found = data.result.found
                total = data.result.total
                if(total) {
-                  $("#response").val("You found a word");
+                  $("#response").val("You found a word!");
                   $("#attempt").val("");
                   window.location.replace("/success")
                }
@@ -129,12 +129,10 @@
                   $("response").html("");
                   $("attempt").val("");
                }
-               showTiles(txt)
+               showTiles(txt);
                }
             );
-
-      }
-);
+      });
    function showTiles(text) {
       text = text.toUpperCase();  // tiles are letter-A.png, etc.
       tiles_html = "";  // Build up the html text of links
